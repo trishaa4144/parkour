@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+    public float speed; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +22,8 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log($"Horizontal input: {horizontal}, Vertical input: {vertical}");
 
         Vector3 movementDirection = new Vector3(horizontal, 0, vertical);
+        movementDirection.Normalize();
 
-        transform.position += movementDirection * Time.deltaTime;
+        transform.position += movementDirection * speed * Time.deltaTime;
     }
 }
