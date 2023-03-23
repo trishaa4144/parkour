@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public float speed; 
+    public float speed;
+    public float rotationSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -25,5 +26,11 @@ public class PlayerMovement : MonoBehaviour
         movementDirection.Normalize();
 
         transform.position += movementDirection * speed * Time.deltaTime;
+
+        if (movementDirection != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 }
