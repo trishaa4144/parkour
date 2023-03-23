@@ -23,9 +23,10 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log($"Horizontal input: {horizontal}, Vertical input: {vertical}");
 
         Vector3 movementDirection = new Vector3(horizontal, 0, vertical);
+        float magnitude = Mathf.Clamp01(movementDirection.magnitude);
         movementDirection.Normalize();
 
-        transform.position += movementDirection * speed * Time.deltaTime;
+        transform.position += movementDirection * magnitude * speed * Time.deltaTime;
 
         if (movementDirection != Vector3.zero)
         {
