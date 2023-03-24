@@ -889,13 +889,13 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_BindingMode: 0
-  m_SplineCurvature: 0
+  m_SplineCurvature: 0.2
   m_Orbits:
-  - m_Height: 8
-    m_Radius: 4
+  - m_Height: 4.5
+    m_Radius: 7
   - m_Height: 7.48
     m_Radius: 13.53
-  - m_Height: 6
+  - m_Height: 0.4
     m_Radius: 4
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
@@ -1375,7 +1375,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660858151}
-  m_LocalRotation: {x: 0.24983768, y: -0.000000008330362, z: 0.0000000021494004, w: 0.96828777}
+  m_LocalRotation: {x: 0.24983768, y: 0.000000008330367, z: -0.0000000021494015, w: 0.96828777}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
