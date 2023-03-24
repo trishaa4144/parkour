@@ -8,10 +8,12 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public float rotationSpeed;
 
+    private CharacterController characterController;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        characterController = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -26,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
         float magnitude = Mathf.Clamp01(movementDirection.magnitude);
         movementDirection.Normalize();
 
-        transform.position += movementDirection * magnitude * speed * Time.deltaTime;
+        characterController.SimpleMove(movementDirection * magnitude * speed);
 
         if (movementDirection != Vector3.zero)
         {
