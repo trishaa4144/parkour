@@ -8,14 +8,18 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public float rotationSpeed;
     public Transform cam;
+    public float jumpSpeed;
 
     private CharacterController characterController;
+    private float ySpeed;
+    private float originalStepOffset;
 
     // Start is called before the first frame update
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
+        originalStepOffset = characterController.stepOffset;
     }
 
     // Update is called once per frame
@@ -24,8 +28,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Debug.Log($"Horizontal input: {horizontal}, Vertical input: {vertical}");
-
+        // Define camera forward vector so movement occurs in direction camera is facing 
         Vector3 cameraForward = Camera.main.transform.forward;
         cameraForward.y = 0;
         
@@ -35,7 +38,26 @@ public class PlayerMovement : MonoBehaviour
         float magnitude = Mathf.Clamp01(movementDirection.magnitude);
         movementDirection.Normalize();
 
-        characterController.SimpleMove(movementDirection * magnitude * speed);
+        ySpeed += Physics.gravity.y * Time.deltaTime;
+
+        if (characterController.isGrounded)
+        {
+            characterController.stepOffset = originalStepOffset;
+            ySpeed = -0.5f;
+            if (Input.GetButtonDown("Jump"))
+            {
+                ySpeed = jumpSpeed;
+            }
+        } 
+        else
+        {
+            characterController.stepOffset = 0;
+        }
+
+        Vector3 velocity = movementDirection * magnitude * speed;
+        velocity.y = ySpeed;
+
+        characterController.Move(velocity * Time.deltaTime);
 
         if (movementDirection != Vector3.zero)
         {
