@@ -9,10 +9,13 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     public Transform cam;
     public float jumpSpeed;
+    public float jumpButtonGracePeriod;
 
     private CharacterController characterController;
     private float ySpeed;
     private float originalStepOffset;
+    private float? lastGroundedTime;
+    private float? jumpButtonPressedTime;
 
     // Start is called before the first frame update
     void Start()
@@ -42,13 +45,26 @@ public class PlayerMovement : MonoBehaviour
 
         if (characterController.isGrounded)
         {
+            lastGroundedTime = Time.time;
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpButtonPressedTime = Time.time;
+        }
+
+        if (Time.time - lastGroundedTime <= jumpButtonGracePeriod)
+        {
             characterController.stepOffset = originalStepOffset;
             ySpeed = -0.5f;
-            if (Input.GetButtonDown("Jump"))
+
+            if (Time.time - jumpButtonPressedTime <= jumpButtonGracePeriod)
             {
                 ySpeed = jumpSpeed;
+                jumpButtonPressedTime = null;
+                lastGroundedTime = null;
             }
-        } 
+        }
         else
         {
             characterController.stepOffset = 0;
