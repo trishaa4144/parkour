@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public float maximumSpeed;
     public float rotationSpeed;
     public Transform cam;
     public float jumpSpeed;
@@ -39,10 +38,13 @@ public class PlayerMovement : MonoBehaviour
         
         Vector3 movementDirection = new Vector3(horizontal, 0, vertical);
         movementDirection = Quaternion.LookRotation(cameraForward) * movementDirection;
-
         float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
-        float speed = inputMagnitude * maximumSpeed;
-        animator.SetFloat("Input Magnitude", inputMagnitude);
+
+        if (!Input.GetKey(KeyCode.LeftShift)) {
+            inputMagnitude /= 2;
+        }
+
+        animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Time.deltaTime);
 
         movementDirection.Normalize();
 
@@ -74,16 +76,27 @@ public class PlayerMovement : MonoBehaviour
         {
             characterController.stepOffset = 0;
         }
-
-        Vector3 velocity = movementDirection * inputMagnitude;
-        velocity.y = ySpeed;
-
-        characterController.Move(velocity * Time.deltaTime);
-
+        
         if (movementDirection != Vector3.zero)
         {
+            animator.SetBool("IsMoving", true);
             Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
+        else 
+        {
+            animator.SetBool("IsMoving", false);
+        }
+
     }
+
+     private void OnAnimatorMove() 
+        {
+
+            Vector3 velocity = animator.deltaPosition;
+            velocity.y = ySpeed * Time.deltaTime;
+
+            characterController.Move(velocity);
+
+        }
 }
