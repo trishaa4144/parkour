@@ -5,12 +5,13 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public float speed;
+    public float maximumSpeed;
     public float rotationSpeed;
     public Transform cam;
     public float jumpSpeed;
     public float jumpButtonGracePeriod;
 
+    private Animator animator;
     private CharacterController characterController;
     private float ySpeed;
     private float originalStepOffset;
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         originalStepOffset = characterController.stepOffset;
@@ -38,7 +40,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movementDirection = new Vector3(horizontal, 0, vertical);
         movementDirection = Quaternion.LookRotation(cameraForward) * movementDirection;
 
-        float magnitude = Mathf.Clamp01(movementDirection.magnitude);
+        float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+        float speed = inputMagnitude * maximumSpeed;
+        animator.SetFloat("Input Magnitude", inputMagnitude);
+
         movementDirection.Normalize();
 
         ySpeed += Physics.gravity.y * Time.deltaTime;
@@ -70,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
             characterController.stepOffset = 0;
         }
 
-        Vector3 velocity = movementDirection * magnitude * speed;
+        Vector3 velocity = movementDirection * inputMagnitude;
         velocity.y = ySpeed;
 
         characterController.Move(velocity * Time.deltaTime);
